@@ -1,0 +1,24 @@
+$colorMap: (
+  white: #fff,
+  purple: #775ce5,
+  red: #f23152,
+  grey: #939199,
+);
+
+@function color($key) {
+  @return map-get($colorMap, $key);
+}
+
+$sizeMap: (
+  default: 16px,
+  s-middle: 20px,
+  middle: 24px,
+  x-midle: 34px,
+  big: 38px,
+  small: 14px,
+  s-small: 12px,
+);
+
+@function size($key: default) {
+  @return map-get($sizeMap, $key);
+}

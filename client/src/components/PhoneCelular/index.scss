@@ -1,0 +1,12 @@
+@use "../../sasslib/service.scss" as s;
+
+.celular-panel {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+  width: 100%;
+
+  padding: s.space(2) s.space(6.5) s.space(3.5);
+}

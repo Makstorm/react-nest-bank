@@ -1,0 +1,8 @@
+@use "../../sasslib/service.scss" as s;
+
+.phone-page-content {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}

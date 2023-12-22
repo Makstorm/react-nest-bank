@@ -1,0 +1,9 @@
+@use "../../sasslib/service.scss" as s;
+
+.back-arrow {
+  @include s.click;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  align-items: center;
+}

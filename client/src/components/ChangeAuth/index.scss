@@ -1,0 +1,15 @@
+@use "../../sasslib/service.scss" as s;
+
+.change {
+  display: flex;
+  gap: 3px;
+
+  color: s.color(black);
+
+  font-size: 14px;
+  font-weight: 400;
+
+  &__link {
+    color: s.color(purple);
+  }
+}
