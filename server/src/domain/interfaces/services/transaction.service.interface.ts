@@ -1,9 +1,11 @@
-import { CreateTransactionDto, Transaction } from '@domain';
+import { CreateTransactionDto, TransactionDocument } from '@domain';
 
 export interface ITransactionService {
-  create(createTransactionDto: CreateTransactionDto): Promise<Transaction>;
-  findAll(): Promise<Transaction[]>;
-  findOne(id: number): Promise<Transaction>;
+  create(
+    createTransactionDto: CreateTransactionDto,
+  ): Promise<TransactionDocument>;
+  findAll(): Promise<TransactionDocument[]>;
+  findOne(id: string): Promise<TransactionDocument>;
 
-  remove(id: number): Promise<Transaction>;
+  remove(id: string): Promise<TransactionDocument>;
 }

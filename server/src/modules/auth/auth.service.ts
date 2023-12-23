@@ -43,7 +43,7 @@ export class AuthService implements IAuthService {
 
     const userTokenDto = new UserTokenCreateDto();
 
-    userTokenDto.id = user.userId;
+    userTokenDto.id = user.id;
 
     userTokenDto.email = user.email;
 

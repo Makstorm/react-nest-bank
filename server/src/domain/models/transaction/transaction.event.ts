@@ -1,4 +1,4 @@
-import { Transaction } from '../../entities';
+import { TransactionDocument } from '../../entities';
 
 export const enum TransactionEventType {
   CREATED = 'created',
@@ -7,7 +7,7 @@ export const enum TransactionEventType {
 
 export class TransactionEvent {
   public constructor(
-    public readonly transaction: Transaction,
+    public readonly transaction: TransactionDocument,
     public readonly type: TransactionEventType,
   ) {}
 }

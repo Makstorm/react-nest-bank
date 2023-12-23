@@ -1,6 +1,6 @@
-import { Transaction } from '@domain';
+import { TransactionDocument } from '@domain';
 import { ApiProperty } from '@nestjs/swagger';
-import { randomInt } from 'crypto';
+import { randomInt, randomUUID } from 'crypto';
 import { TransactionType } from '../../../core';
 
 export class TransactionModel {
@@ -23,18 +23,18 @@ export class TransactionModel {
   public amount: number;
 
   @ApiProperty({
-    type: Number,
+    type: String,
     description: 'User who makes payment',
-    example: randomInt(100),
+    example: randomUUID(),
   })
-  public userId: number;
+  public sender: string;
 
   @ApiProperty({
-    type: Number,
+    type: String,
     description: 'User who recieves payment',
-    example: randomInt(100),
+    example: randomUUID(),
   })
-  public recipientId: number;
+  public receiver: string;
 
   @ApiProperty({
     type: String,
@@ -43,7 +43,7 @@ export class TransactionModel {
   })
   public date: Date;
 
-  public static formEntity(transaction: Transaction): TransactionModel {
+  public static formEntity(transaction: TransactionDocument): TransactionModel {
     if (!transaction) {
       return null;
     }
@@ -53,8 +53,10 @@ export class TransactionModel {
     model.id = transaction.id;
     model.type = transaction.type;
     model.amount = transaction.amount;
-    model.userId = transaction.userId;
-    model.recipientId = transaction.recipientId;
-    model.date = transaction.date;
+    model.sender = transaction.sender;
+    model.receiver = transaction.receiver;
+    model.date = transaction.createdAt;
+
+    return model;
   }
 }
