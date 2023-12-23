@@ -3,47 +3,47 @@ import {
   ITransactionService,
   IUserService,
   Transaction,
+  TransactionDocument,
   TransactionEvent,
   TransactionEventType,
   UserServiceTag,
 } from '@domain';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class TransactionService implements ITransactionService {
+  @InjectModel(Transaction.name)
+  private readonly transactionModel: Model<Transaction>;
+
   @Inject(UserServiceTag) private readonly userService: IUserService;
 
   public constructor(private eventEmitter: EventEmitter2) {}
 
-  private transactions: Transaction[] = [];
-
   public async create(
     createTransactionDto: CreateTransactionDto,
-  ): Promise<Transaction> {
-    const transactionEntity = new Transaction();
-
-    transactionEntity.id =
-      this.transactions.length === 0
-        ? 1
-        : this.transactions[this.transactions.length - 1].id + 1;
-    transactionEntity.amount = createTransactionDto.amount;
-    transactionEntity.date = new Date();
-    transactionEntity.type = createTransactionDto.type;
+  ): Promise<TransactionDocument> {
+    // const transactionEntity = new Transaction();
+    const transactionEntity = new this.transactionModel({
+      amount: createTransactionDto.amount,
+      category: createTransactionDto.category,
+      type: createTransactionDto.type,
+    });
 
     const user = await this.userService.findByEmail(
       createTransactionDto.userEmail,
     );
 
-    transactionEntity.userId = user.userId;
+    transactionEntity.sender = user.id;
 
     const recipient = await this.userService.findByEmail(
       createTransactionDto.recipientEmail,
     );
-    transactionEntity.recipientId = recipient.userId;
-    transactionEntity.category = createTransactionDto.category;
+    transactionEntity.receiver = recipient.id;
 
-    this.transactions.push(transactionEntity);
+    transactionEntity.save();
 
     await this.emitingBankEvent(
       transactionEntity,
@@ -53,28 +53,29 @@ export class TransactionService implements ITransactionService {
     return transactionEntity;
   }
 
-  public async findAll(): Promise<Transaction[]> {
-    return this.transactions;
+  public async findAll(): Promise<TransactionDocument[]> {
+    return this.transactionModel.find();
   }
 
-  public async findOne(id: number): Promise<Transaction> {
-    return this.transactions.find((el) => el.id === id);
+  public async findOne(id: string): Promise<TransactionDocument> {
+    return this.transactionModel.findById(id);
   }
 
-  public async remove(id: number): Promise<Transaction> {
-    const transactionForDelete = await this.findOne(id);
-    this.transactions = this.transactions.filter((el) => el.id !== id);
+  public async remove(id: string): Promise<TransactionDocument> {
+    const deletedTransaction = await this.transactionModel.findOneAndDelete({
+      _id: id,
+    });
 
     await this.emitingBankEvent(
-      transactionForDelete,
+      deletedTransaction,
       TransactionEventType.DELETED,
     );
 
-    return transactionForDelete;
+    return deletedTransaction;
   }
 
   private async emitingBankEvent(
-    transaction: Transaction,
+    transaction: TransactionDocument,
     type: TransactionEventType,
   ): Promise<void> {
     this.eventEmitter.emit(

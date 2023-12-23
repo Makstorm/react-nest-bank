@@ -37,14 +37,14 @@ export class TransactionController {
   @ApiResponse({ type: TransactionModel })
   @Get(':id')
   public async findOne(@Param('id') id: string) {
-    const entity = await this.service.findOne(+id);
+    const entity = await this.service.findOne(id);
     return TransactionModel.formEntity(entity);
   }
 
   @ApiResponse({ type: TransactionModel })
   @Delete(':id')
   public async remove(@Param('id') id: string) {
-    const entity = await this.service.remove(+id);
+    const entity = await this.service.remove(id);
     return TransactionModel.formEntity(entity);
   }
 }

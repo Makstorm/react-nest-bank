@@ -1,8 +1,8 @@
-import { User } from '../../entities';
+import { User, UserDocument } from '../../entities';
 
 export interface IUserService {
-  findByEmail(email: string): Promise<User | undefined>;
+  findByEmail(email: string): Promise<UserDocument>;
   isEmailTaken(email: string): Promise<boolean>;
-  create(entity: Partial<User>): Promise<User>;
+  create(entity: Partial<User>): Promise<UserDocument>;
   markEmailAsConfirmed(email: string): Promise<void>;
 }
