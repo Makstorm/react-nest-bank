@@ -1,12 +1,10 @@
-import { ITransaction } from "./ITransaction";
-
 export interface IUser {
-  userId: number;
+  id: number;
   email: string;
   username: string;
   password: string;
   emailConfirmed: boolean;
   balance: number;
 
-  transactions: ITransaction[];
+  transactions: string[];
 }

@@ -1,4 +1,5 @@
 import {
+  CreateUserDto,
   IUserService,
   TransactionEvent,
   TransactionEventType,
@@ -14,26 +15,6 @@ import { Model } from 'mongoose';
 @Injectable()
 export class UserService implements IUserService {
   @InjectModel(User.name) private readonly userModel: Model<User>;
-  // private users: User[] = [
-  //   {
-  //     userId: 1,
-  //     username: 'john',
-  //     email: 'hello@mail.com',
-  //     password: 'changeme',
-  //     emailConfirmed: true,
-  //     balance: 400,
-  //     transactions: [],
-  //   },
-  //   {
-  //     userId: 2,
-  //     username: 'maria',
-  //     email: 'hello2@mail.com',
-  //     password: 'guess',
-  //     emailConfirmed: true,
-  //     balance: 400,
-  //     transactions: [],
-  //   },
-  // ];
 
   public async findByEmail(email: string): Promise<UserDocument> {
     const user = await this.userModel.findOne({ email: email }).exec();
@@ -55,34 +36,19 @@ export class UserService implements IUserService {
   }
 
   public async isEmailTaken(email: string): Promise<boolean> {
-    // return this.users.find((el) => el.email === email) ? true : false;
     const user = await this.userModel.findOne({ email }).exec();
 
     return user ? true : false;
   }
 
-  public async create(entity: Partial<User>): Promise<UserDocument> {
-    // const newUser: User = {
-    //   userId: this.users[this.users.length - 1].userId + 1,
-    //   username: entity.username,
-    //   email: entity.email,
-    //   password: entity.password,
-    //   emailConfirmed: false,
-    //   balance: 0,
-    //   transactions: [],
-    // };
-
+  public async create(dto: CreateUserDto): Promise<UserDocument> {
     const newUser = new this.userModel({
-      username: entity.username,
-      email: entity.email,
-      password: entity.password,
-      emailConfirmed: false,
-      balance: 10000,
+      ...dto,
     });
 
     const result = await newUser.save();
 
-    return result.id;
+    return result;
   }
 
   public async markEmailAsConfirmed(email: string): Promise<void> {

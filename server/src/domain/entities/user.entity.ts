@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-// import { Transaction } from './transaction.entity';
 
 import { HydratedDocument } from 'mongoose';
 
@@ -34,14 +33,3 @@ export class User {
 export type UserDocument = HydratedDocument<User>;
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
-// export type User = {
-//   userId: number;
-//   email: string;
-//   username: string;
-//   password: string;
-//   emailConfirmed: boolean;
-//   balance: number;
-
-//   transactions: Transaction[];
-// };

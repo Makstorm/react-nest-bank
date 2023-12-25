@@ -81,7 +81,6 @@ const AuthPage = () => {
           setError("Missing credentials");
         }
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         if (emailValue && passwordValue && textValue) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           data = await registration(emailValue, passwordValue, textValue);
@@ -126,14 +125,27 @@ const AuthPage = () => {
       case "/signup-confirm": {
         return {
           outline: false,
-          onClick: () => {},
+          onClick: () => {
+            navigate(SIGNIN_ROUTE);
+          },
           children: "Continue",
         };
       }
+
       case "/recovery": {
         return {
           outline: false,
           onClick: () => {},
+          children: "Change password",
+        };
+      }
+
+      case "/recovery-confirm": {
+        return {
+          outline: false,
+          onClick: () => {
+            navigate(SIGNIN_ROUTE);
+          },
           children: "Change password",
         };
       }
