@@ -24,8 +24,11 @@ export class TransactionController {
 
   @ApiResponse({ type: TransactionModel })
   @Post()
-  public async create(@Body() createTransactionDto: CreateTransactionDto) {
-    const entity = await this.service.create(createTransactionDto);
+  public async create(
+    @Body() createTransactionDto: CreateTransactionDto,
+    @Req() req: RequestWithUser,
+  ) {
+    const entity = await this.service.create(createTransactionDto, req.user);
     return TransactionModel.formEntity(entity);
   }
 

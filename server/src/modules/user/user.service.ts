@@ -68,28 +68,30 @@ export class UserService implements IUserService {
       payload.transaction.type === TransactionType.CONSUMABLE
         ? -payload.transaction.amount
         : payload.transaction.amount;
+
     const money =
       payload.type === TransactionEventType.DELETED
         ? -transactionAmount
         : transactionAmount;
 
     const resultParameters = {
-      bankId: payload.transaction.sender,
-      recipientId: payload.transaction.receiver,
+      sender: payload.transaction.sender,
+      receiver: payload.transaction.receiver,
       money,
     };
 
-    const user = await this.findById(resultParameters.bankId);
-    const recipient = await this.findById(resultParameters.recipientId);
+    const user = await this.findById(resultParameters.sender);
+    const recipient = await this.findById(resultParameters.receiver);
 
     user.balance = user.balance + money;
+    recipient.balance = recipient.balance - money;
+
     payload.type === TransactionEventType.DELETED
       ? (user.transactions = user.transactions.filter(
           (el) => el !== payload.transaction.id,
         ))
       : user.transactions.push(payload.transaction.id);
 
-    recipient.balance = recipient.balance - money;
     payload.type === TransactionEventType.DELETED
       ? (recipient.transactions = recipient.transactions.filter(
           (el) => el !== payload.transaction.id,

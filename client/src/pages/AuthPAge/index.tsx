@@ -1,16 +1,16 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import AuthInput from "../../components/AuthInput";
-import { InputType } from "../../components/AuthInput/type.enum";
-import BackArrow from "../../components/BackwardArrow";
-import ChangeAuth from "../../components/ChangeAuth";
-import ConfirmButton from "../../components/ConfirmButton";
-import PageInfoTitle from "../../components/PageInfoTitle";
-import PhonePage from "../../components/PhonePage";
-import PhonePageContent from "../../components/PhonePageContent";
+import AuthInput from "../../components/Auth/AuthInput";
+import { InputType } from "../../components/Auth/AuthInput/type.enum";
+import BackArrow from "../../components/Navigations/BackwardArrow";
+import ChangeAuth from "../../components/Auth/ChangeAuth";
+import ConfirmButton from "../../components/Navigations/ConfirmButton";
+import PageInfoTitle from "../../components/Phone/PageInfoTitle";
+import PhonePage from "../../components/Phone/PhonePage";
+import PhonePageContent from "../../components/Phone/PhonePageContent";
 import { useState } from "react";
 import { login, registration } from "../../http/userAPI";
 import { BALANCE_ROUTE, SIGNIN_ROUTE } from "../../components/AppRouter/consts";
-import AuthError from "../../components/AuthErrror";
+import AuthError from "../../components/Auth/AuthErrror";
 import { AxiosError } from "axios";
 
 const AuthPage = () => {
@@ -162,7 +162,9 @@ const AuthPage = () => {
 
   return (
     <PhonePage>
-      <BackArrow />
+      <section style={{ marginTop: "50px" }}>
+        <BackArrow />
+      </section>
       <PageInfoTitle {...getTitle()} />
 
       <PhonePageContent>

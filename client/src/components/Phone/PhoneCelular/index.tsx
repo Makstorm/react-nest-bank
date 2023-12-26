@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import "./index.scss";
-import { BALANCE_ROUTE, INDEX_ROUTE } from "../AppRouter/consts";
+import { BALANCE_ROUTE, INDEX_ROUTE } from "../../AppRouter/consts";
 
 const PhoneCelular = () => {
   const location = useLocation();

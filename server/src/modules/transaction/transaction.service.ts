@@ -6,12 +6,14 @@ import {
   TransactionDocument,
   TransactionEvent,
   TransactionEventType,
+  UserDocument,
   UserServiceTag,
 } from '@domain';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { TransactionType } from 'src/core';
 
 @Injectable()
 export class TransactionService implements ITransactionService {
@@ -24,24 +26,23 @@ export class TransactionService implements ITransactionService {
 
   public async create(
     createTransactionDto: CreateTransactionDto,
+    sender: UserDocument,
   ): Promise<TransactionDocument> {
     // const transactionEntity = new Transaction();
     const transactionEntity = new this.transactionModel({
       amount: createTransactionDto.amount,
       category: createTransactionDto.category,
-      type: createTransactionDto.type,
+      type: TransactionType.CONSUMABLE,
     });
 
-    const user = await this.userService.findByEmail(
-      createTransactionDto.userEmail,
-    );
+    const senderEntity = await this.userService.findById(sender.id);
 
-    transactionEntity.sender = user.id;
+    transactionEntity.sender = senderEntity.id;
 
-    const recipient = await this.userService.findByEmail(
-      createTransactionDto.recipientEmail,
+    const receiver = await this.userService.findByEmail(
+      createTransactionDto.receiverEmail,
     );
-    transactionEntity.receiver = recipient.id;
+    transactionEntity.receiver = receiver.id;
 
     transactionEntity.save();
 

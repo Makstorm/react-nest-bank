@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import "./index.scss";
-import { INDEX_ROUTE } from "../AppRouter/consts";
+import { INDEX_ROUTE } from "../../AppRouter/consts";
 
 const BackArrow = () => {
   const location = useLocation();
