@@ -41,7 +41,11 @@ export class AuthController {
   public async signIn(@Req() req: RequestWithUser): Promise<UserAuth> {
     const { user } = req;
     console.log(user);
-    return new UserAuth('token');
+    return await this.service.singIn({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    });
   }
 
   @Post('signUp')

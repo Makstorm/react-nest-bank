@@ -7,36 +7,59 @@ import ConfirmButton from "../../components/Navigations/ConfirmButton";
 import PageInfoTitle from "../../components/Phone/PageInfoTitle";
 import PhonePage from "../../components/Phone/PhonePage";
 import PhonePageContent from "../../components/Phone/PhonePageContent";
-import { useState } from "react";
-import { login, registration } from "../../http/userAPI";
+import { useEffect, useState } from "react";
+import { registration } from "../../http/userAPI";
 import { BALANCE_ROUTE, SIGNIN_ROUTE } from "../../components/AppRouter/consts";
 import AuthError from "../../components/Auth/AuthErrror";
-import { AxiosError } from "axios";
+
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { fetchUser } from "../../store/reducers/ActionCreators";
+import { setUserError } from "../../store/reducers/UserSlice";
 
 const AuthPage = () => {
-  const [error, setError] = useState<string>("");
+  const dispatch = useAppDispatch();
 
-  const [emailValue, setEmailValue] = useState<string>("");
+  const { error, isAuth } = useAppSelector((state) => state.userReduser);
 
-  const handleEmailChange = (value: string) => {
-    setEmailValue(value);
+  // Email field
+  // const [emailValue, setEmailValue] = useState<string>("");
+
+  // const handleEmailChange = (value: string) => {
+  //   setEmailValue(value);
+  // };
+
+  // // Password field
+  // const [passwordValue, setPasswordValue] = useState<string>("");
+
+  // const handlePasswordChange = (value: string) => {
+  //   setPasswordValue(value);
+  // };
+
+  // // Usernam field
+  // const [textValue, setTextValue] = useState<string>("");
+
+  // const handleTextChange = (value: string) => {
+  //   setTextValue(value);
+  // };
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    text: "",
+  });
+
+  const onChange = (name: string, value: string) => {
+    setFormData({ ...formData, [name]: value });
   };
 
-  const [passwordValue, setPasswordValue] = useState<string>("");
-
-  const handlePasswordChange = (value: string) => {
-    setPasswordValue(value);
-  };
-
-  const [textValue, setTextValue] = useState<string>("");
-
-  const handleTextChange = (value: string) => {
-    setTextValue(value);
-  };
-
+  // Utils functions
   const location = useLocation();
   const isLogin = location.pathname === SIGNIN_ROUTE;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuth) navigate(BALANCE_ROUTE);
+  }, [isAuth]);
 
   const getTitle = (): { title: string; subtitle: string } => {
     switch (location.pathname) {
@@ -66,34 +89,26 @@ const AuthPage = () => {
     }
   };
 
-  // const login = async () => {
-  //   console.log("login");
-  // };
-
   const auth = async () => {
-    try {
-      let data;
-      if (isLogin) {
-        if (emailValue && passwordValue) {
-          data = await login(emailValue, passwordValue);
-          navigate(BALANCE_ROUTE);
-        } else {
-          setError("Missing credentials");
-        }
+    if (isLogin) {
+      //  //
+      if (formData.email && formData.password) {
+        dispatch(
+          fetchUser({ email: formData.email, password: formData.password })
+        );
+        // navigate(BALANCE_ROUTE);
       } else {
-        if (emailValue && passwordValue && textValue) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          data = await registration(emailValue, passwordValue, textValue);
-          navigate(SIGNIN_ROUTE);
-        } else {
-          setError("Missing credentials");
-        }
+        dispatch(setUserError("Missing credentials"));
       }
-    } catch (e) {
-      if (e instanceof AxiosError) {
-        console.log(e);
-        setError(e.response?.data.message);
+      //  //
+    } else {
+      if (formData.email && formData.password && formData.text) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        await registration(formData.email, formData.password, formData.text);
+      } else {
+        dispatch(setUserError("Missing credentials"));
       }
+      // navigate(SIGNIN_ROUTE);
     }
   };
 
@@ -171,17 +186,17 @@ const AuthPage = () => {
         {location.pathname === "/signup" && (
           <>
             <AuthInput
-              onInputChange={handleEmailChange}
+              onInputChange={onChange}
               title="Email"
               type={InputType.EMAIL}
             />
             <AuthInput
-              onInputChange={handleEmailChange}
+              onInputChange={onChange}
               title="Nickname"
               type={InputType.TEXT}
             />
             <AuthInput
-              onInputChange={handlePasswordChange}
+              onInputChange={onChange}
               title="Password"
               type={InputType.PASSWORD}
             />{" "}
@@ -191,12 +206,12 @@ const AuthPage = () => {
         {location.pathname === "/signin" && (
           <>
             <AuthInput
-              onInputChange={handleEmailChange}
+              onInputChange={onChange}
               title="Email"
               type={InputType.EMAIL}
             />
             <AuthInput
-              onInputChange={handlePasswordChange}
+              onInputChange={onChange}
               title="Password"
               type={InputType.PASSWORD}
             />{" "}
@@ -206,7 +221,7 @@ const AuthPage = () => {
         {location.pathname === "/signup-confirm" && (
           <>
             <AuthInput
-              onInputChange={handleTextChange}
+              onInputChange={onChange}
               title="Code"
               type={InputType.TEXT}
             />
@@ -216,7 +231,7 @@ const AuthPage = () => {
         {location.pathname === "/recovery" && (
           <>
             <AuthInput
-              onInputChange={handleEmailChange}
+              onInputChange={onChange}
               title="Email"
               type={InputType.EMAIL}
             />
@@ -236,7 +251,7 @@ const AuthPage = () => {
 
         <ConfirmButton {...getButton()}></ConfirmButton>
 
-        {error && <AuthError>{error}</AuthError>}
+        {error ? <AuthError>{error}</AuthError> : null}
       </PhonePageContent>
     </PhonePage>
   );

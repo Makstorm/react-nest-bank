@@ -8,6 +8,7 @@ import {
   UserAuth,
   UserDocument,
   UserServiceTag,
+  UserTokenCreateDto,
 } from '@domain';
 import {
   BadRequestException,
@@ -25,21 +26,9 @@ export class AuthService implements IAuthService {
   @Inject(JwtServiceTag)
   private readonly tokenService: ITokenService;
 
-  public async singIn(dto: LoginDto): Promise<UserAuth> {
-    const user = await this.userService.findByEmail(dto.email);
-
-    if (!user) {
-      throw new NotFoundException(
-        `Account with email ${dto.email} does not exist`,
-      );
-    }
-
-    await this.verifyPassword(dto.password, user.password);
-
+  public async singIn(dto: UserTokenCreateDto): Promise<UserAuth> {
     const token = await this.tokenService.generateJwt({
-      id: user.id,
-      email: user.email,
-      username: user.username,
+      ...dto,
     });
 
     return new UserAuth(token);
