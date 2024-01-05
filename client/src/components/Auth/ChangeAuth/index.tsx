@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { RECOVERY_ROUTE, SIGNIN_ROUTE } from "../AppRouter/consts";
+import { RECOVERY_ROUTE, SIGNIN_ROUTE } from "../../AppRouter/consts";
 
 import "./index.scss";
 

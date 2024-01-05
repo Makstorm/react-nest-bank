@@ -7,7 +7,7 @@ import "./index.scss";
 interface IAuthInputProps {
   title: string;
   type: InputType;
-  onInputChange: (value: string) => void;
+  onInputChange: (name: string, value: string) => void;
 }
 
 const AuthInput: FC<IAuthInputProps> = ({ title, type, onInputChange }) => {
@@ -39,8 +39,10 @@ const AuthInput: FC<IAuthInputProps> = ({ title, type, onInputChange }) => {
   }, [value]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
     setValue(event.target.value);
-    onInputChange(event.target.value);
+    const { name, value } = event.target;
+    onInputChange(name, value);
   };
 
   const togglePasswordVisibility = () => {
@@ -54,6 +56,13 @@ const AuthInput: FC<IAuthInputProps> = ({ title, type, onInputChange }) => {
         <input
           className={`input__field ${error ? "input__field--error" : ""}`}
           type={visibility ? "text" : "password"}
+          name={
+            type === InputType.EMAIL
+              ? "email"
+              : type === InputType.PASSWORD
+              ? "password"
+              : "text"
+          }
           placeholder={`Enter you ${title.toLowerCase()}`}
           onChange={handleChange}
           value={value}

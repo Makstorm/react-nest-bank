@@ -1,5 +1,5 @@
 import { FC } from "react";
-import ConfirmButton from "../../components/ConfirmButton";
+import ConfirmButton from "../../components/Navigations/ConfirmButton";
 import "./index.scss";
 import { useNavigate } from "react-router-dom";
 import { SIGNIN_ROUTE, SIGNUP_ROUTE } from "../../components/AppRouter/consts";

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import "./index.scss";
-import PhoneCelular from "../../components/PhoneCelular";
-import HomeBar from "../../components/HomeBar";
+import PhoneCelular from "../../components/Phone/PhoneCelular";
+import HomeBar from "../../components/Navigations/HomeBar";
 import { Outlet } from "react-router-dom";
 
 const PhoneDisplay: FC = () => {

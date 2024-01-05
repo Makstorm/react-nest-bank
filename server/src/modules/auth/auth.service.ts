@@ -5,8 +5,8 @@ import {
   JwtServiceTag,
   LoginDto,
   RegisterDto,
-  User,
   UserAuth,
+  UserDocument,
   UserServiceTag,
   UserTokenCreateDto,
 } from '@domain';
@@ -26,7 +26,15 @@ export class AuthService implements IAuthService {
   @Inject(JwtServiceTag)
   private readonly tokenService: ITokenService;
 
-  public async singIn(dto: LoginDto): Promise<UserAuth> {
+  public async singIn(dto: UserTokenCreateDto): Promise<UserAuth> {
+    const token = await this.tokenService.generateJwt({
+      ...dto,
+    });
+
+    return new UserAuth(token);
+  }
+
+  public async getAuthenticatedUser(dto: LoginDto): Promise<UserDocument> {
     const user = await this.userService.findByEmail(dto.email);
 
     if (!user) {
@@ -35,41 +43,41 @@ export class AuthService implements IAuthService {
       );
     }
 
-    const comparePassword = await bcrypt.compare(dto.password, user.password);
+    await this.verifyPassword(dto.password, user.password);
 
-    if (!comparePassword) {
-      throw new BadRequestException('Wrong credentials');
-    }
-
-    const userTokenDto = new UserTokenCreateDto();
-
-    userTokenDto.id = user.id;
-
-    userTokenDto.email = user.email;
-
-    userTokenDto.username = user.username;
-
-    const token = await this.tokenService.generateJwt(userTokenDto);
-
-    return new UserAuth(token);
+    return user;
   }
 
-  public async signUp(dto: RegisterDto): Promise<void> {
+  public async signUp(dto: RegisterDto): Promise<UserDocument> {
     const doesExists = await this.userService.isEmailTaken(dto.email);
 
     if (doesExists) {
       throw new BadRequestException(`Email ${dto.email} is already taken`);
     }
 
-    const user: Partial<User> = {};
-
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(dto.password, salt);
 
-    user.password = hashPassword;
-    user.username = dto.userName;
-    user.email = dto.email;
+    const user = await this.userService.create({
+      ...dto,
+      password: hashPassword,
+    });
 
-    await this.userService.create(user);
+    user.password = undefined;
+
+    return user;
+  }
+
+  private async verifyPassword(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ) {
+    const isPasswordMatching = await bcrypt.compare(
+      plainTextPassword,
+      hashedPassword,
+    );
+    if (!isPasswordMatching) {
+      throw new BadRequestException('Wrond credentials provided');
+    }
   }
 }

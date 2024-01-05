@@ -7,11 +7,9 @@ export class TokenService implements ITokenService {
   @Inject(JwtService)
   private readonly jwtService: JwtService;
 
-  public async generateJwt(user: UserTokenCreateDto): Promise<string> {
+  public async generateJwt(dto: UserTokenCreateDto): Promise<string> {
     const payload = {
-      userId: user.id,
-      email: user.email,
-      username: user.username,
+      ...dto,
     };
 
     return this.jwtService.sign(payload);

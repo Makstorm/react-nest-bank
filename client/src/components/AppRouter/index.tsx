@@ -9,9 +9,12 @@ import { useAppSelector } from "../../hooks/redux";
 import { authRoutes, publicRoutes } from "./routes";
 import { BALANCE_ROUTE, INDEX_ROUTE } from "./consts";
 import PhoneDisplay from "../../containers/PhoneDisplay";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRouter = () => {
-  const user = useAppSelector((state) => state.userReduser.user);
+  // console.log(user);
+
+  const isAuth = useAppSelector((state) => state.userReduser.isAuth);
 
   // const router = createBrowserRouter(
   //   createRoutesFromElements(
@@ -48,15 +51,18 @@ const AppRouter = () => {
   const createRoutes = () => {
     return createRoutesFromElements(
       <>
-        {user &&
-          authRoutes.map(({ path, Component }) => (
-            <Route
-              key={path}
-              path={path}
-              element={<Component />}
-              errorElement={<div>404 Not found</div>}
-            />
-          ))}
+        {authRoutes.map(({ path, Component }) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              <ProtectedRoute>
+                <Component />
+              </ProtectedRoute>
+            }
+            errorElement={<div>404 Not found</div>}
+          />
+        ))}
         {publicRoutes.map(({ path, Component }) => (
           <Route
             key={path}
@@ -68,7 +74,7 @@ const AppRouter = () => {
         <Route
           path="*"
           element={
-            (user && <Navigate to={BALANCE_ROUTE} />) || (
+            (isAuth && <Navigate to={BALANCE_ROUTE} />) || (
               <Navigate to={INDEX_ROUTE} />
             )
           }
@@ -80,8 +86,6 @@ const AppRouter = () => {
   const router = createBrowserRouter([
     { element: <PhoneDisplay />, children: createRoutes() },
   ]);
-
-  console.log(router);
 
   return <RouterProvider router={router} />;
 };

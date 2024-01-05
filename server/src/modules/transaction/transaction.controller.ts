@@ -6,12 +6,14 @@ import {
   Param,
   Delete,
   Inject,
+  Req,
 } from '@nestjs/common';
 import {
   ITransactionService,
   TransactionServiceTag,
   CreateTransactionDto,
   TransactionModel,
+  RequestWithUser,
 } from '@domain';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -22,14 +24,18 @@ export class TransactionController {
 
   @ApiResponse({ type: TransactionModel })
   @Post()
-  public async create(@Body() createTransactionDto: CreateTransactionDto) {
-    const entity = await this.service.create(createTransactionDto);
+  public async create(
+    @Body() createTransactionDto: CreateTransactionDto,
+    @Req() req: RequestWithUser,
+  ) {
+    const entity = await this.service.create(createTransactionDto, req.user);
     return TransactionModel.formEntity(entity);
   }
 
   @ApiResponse({ type: [TransactionModel] })
   @Get()
-  public async findAll() {
+  public async findAll(@Req() req: RequestWithUser) {
+    console.log(req.user);
     const entities = await this.service.findAll();
     return entities.map((el) => TransactionModel.formEntity(el));
   }

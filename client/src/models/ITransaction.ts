@@ -4,8 +4,8 @@ export interface ITransaction {
   id: number;
   amount: number;
   type: TransactionType;
-  userId: number;
+  sender: string;
   date: Date;
-  recipientId: number;
+  receiver: string;
   category: string;
 }

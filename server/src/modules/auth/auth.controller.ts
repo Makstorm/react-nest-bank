@@ -5,17 +5,22 @@ import {
   IEmailService,
   LoginDto,
   RegisterDto,
+  RequestWithUser,
   UserAuth,
+  UserModel,
 } from '@domain';
 import {
   Body,
   Controller,
   Inject,
   Post,
+  Req,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { LocalAuthenticationGuard } from '../../core';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -26,20 +31,28 @@ export class AuthController {
   @Inject(EmailServiceTag)
   private readonly emailService: IEmailService;
 
+  @ApiBody({ type: LoginDto })
   @ApiResponse({
     type: UserAuth,
   })
   @UsePipes(new ValidationPipe())
+  @UseGuards(LocalAuthenticationGuard)
   @Post('sighIn')
-  public async signIn(@Body() dto: LoginDto): Promise<UserAuth> {
-    return await this.service.singIn(dto);
+  public async signIn(@Req() req: RequestWithUser): Promise<UserAuth> {
+    const { user } = req;
+    console.log(user);
+    return await this.service.singIn({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    });
   }
 
   @Post('signUp')
   @UsePipes(new ValidationPipe())
-  public async signUp(@Body() dto: RegisterDto): Promise<void> {
+  public async signUp(@Body() dto: RegisterDto): Promise<UserModel> {
     const user = await this.service.signUp(dto);
     // await this.emailService.sendVerificationLink(dto.email);
-    return user;
+    return UserModel.formEntity(user);
   }
 }

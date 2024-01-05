@@ -1,5 +1,6 @@
 import AuthPage from "../../pages/AuthPAge";
 import ConfirmPage from "../../pages/ConfirmPage";
+import WalletPage from "../../pages/WalletPage";
 import WelcomePage from "../../pages/WelcomePage";
 import {
   BALANCE_ROUTE,
@@ -19,7 +20,7 @@ import {
 export const authRoutes = [
   {
     path: BALANCE_ROUTE,
-    Component: WelcomePage,
+    Component: WalletPage,
   },
   {
     path: NOTIFICATIONS_ROUTE,

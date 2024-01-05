@@ -4,8 +4,8 @@ import { randomInt, randomUUID } from 'crypto';
 import { TransactionType } from '../../../core';
 
 export class TransactionModel {
-  @ApiProperty({ type: Number, example: randomInt(100) })
-  public id: number;
+  @ApiProperty({ type: String, example: randomUUID() })
+  public id: string;
 
   @ApiProperty({
     description: 'List of posible variants',
@@ -37,7 +37,7 @@ export class TransactionModel {
   public receiver: string;
 
   @ApiProperty({
-    type: String,
+    type: Date,
     description: 'User who makes payment',
     example: new Date(),
   })
