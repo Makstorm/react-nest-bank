@@ -5,9 +5,10 @@ import { PostmarkModule } from '../postmark';
 import { EmailServiceTag } from '@domain';
 import { EmailController } from './email.controller';
 import { UserModule } from '../user';
+import { PasswordModule } from '../password';
 
 @Module({
-  imports: [JwtModule, PostmarkModule, UserModule],
+  imports: [JwtModule, PostmarkModule, UserModule, PasswordModule],
   providers: [{ provide: EmailServiceTag, useClass: EmailService }],
   exports: [EmailServiceTag],
   controllers: [EmailController],

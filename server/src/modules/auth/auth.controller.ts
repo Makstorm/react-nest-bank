@@ -4,6 +4,7 @@ import {
   IAuthService,
   IEmailService,
   LoginDto,
+  RecoveryDto,
   RegisterDto,
   RequestWithUser,
   UserAuth,
@@ -40,7 +41,7 @@ export class AuthController {
   @Post('sighIn')
   public async signIn(@Req() req: RequestWithUser): Promise<UserAuth> {
     const { user } = req;
-    console.log(user);
+
     return await this.service.singIn({
       id: user.id,
       username: user.username,
@@ -52,7 +53,13 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   public async signUp(@Body() dto: RegisterDto): Promise<UserModel> {
     const user = await this.service.signUp(dto);
-    // await this.emailService.sendVerificationLink(dto.email);
+    await this.emailService.sendVerificationLink(dto.email);
     return UserModel.formEntity(user);
+  }
+
+  @Post('recovery')
+  @UsePipes(new ValidationPipe())
+  public async recoveryPassword(@Body() dto: RecoveryDto): Promise<void> {
+    await this.emailService.sendPaswordRecoverLink(dto.email);
   }
 }

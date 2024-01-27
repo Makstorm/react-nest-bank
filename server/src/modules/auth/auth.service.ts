@@ -1,9 +1,11 @@
 import {
   IAuthService,
+  IPasswordService,
   ITokenService,
   IUserService,
   JwtServiceTag,
   LoginDto,
+  PasswordServiceTag,
   RegisterDto,
   UserAuth,
   UserDocument,
@@ -16,7 +18,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -25,6 +26,9 @@ export class AuthService implements IAuthService {
 
   @Inject(JwtServiceTag)
   private readonly tokenService: ITokenService;
+
+  @Inject(PasswordServiceTag)
+  private readonly passwordService: IPasswordService;
 
   public async singIn(dto: UserTokenCreateDto): Promise<UserAuth> {
     const token = await this.tokenService.generateJwt({
@@ -43,7 +47,7 @@ export class AuthService implements IAuthService {
       );
     }
 
-    await this.verifyPassword(dto.password, user.password);
+    await this.passwordService.verifyPassword(dto.password, user.password);
 
     return user;
   }
@@ -55,29 +59,19 @@ export class AuthService implements IAuthService {
       throw new BadRequestException(`Email ${dto.email} is already taken`);
     }
 
-    const salt = await bcrypt.genSalt();
-    const hashPassword = await bcrypt.hash(dto.password, salt);
+    const hashPassword = await this.passwordService.generateHashPassword(
+      dto.password,
+    );
 
     const user = await this.userService.create({
       ...dto,
       password: hashPassword,
+      emailConfirmed: false,
+      balance: 0,
     });
 
     user.password = undefined;
 
     return user;
-  }
-
-  private async verifyPassword(
-    plainTextPassword: string,
-    hashedPassword: string,
-  ) {
-    const isPasswordMatching = await bcrypt.compare(
-      plainTextPassword,
-      hashedPassword,
-    );
-    if (!isPasswordMatching) {
-      throw new BadRequestException('Wrond credentials provided');
-    }
   }
 }
