@@ -7,10 +7,16 @@ import "./index.scss";
 interface IAuthInputProps {
   title: string;
   type: InputType;
+  name?: string;
   onInputChange: (name: string, value: string) => void;
 }
 
-const AuthInput: FC<IAuthInputProps> = ({ title, type, onInputChange }) => {
+const AuthInput: FC<IAuthInputProps> = ({
+  title,
+  type,
+  onInputChange,
+  name,
+}) => {
   const [value, setValue] = useState<string>("");
 
   const [visibility, setVisibility] = useState<boolean>(
@@ -57,7 +63,9 @@ const AuthInput: FC<IAuthInputProps> = ({ title, type, onInputChange }) => {
           className={`input__field ${error ? "input__field--error" : ""}`}
           type={visibility ? "text" : "password"}
           name={
-            type === InputType.EMAIL
+            name
+              ? name
+              : type === InputType.EMAIL
               ? "email"
               : type === InputType.PASSWORD
               ? "password"
