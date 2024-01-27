@@ -1,9 +1,24 @@
 @use "../../../sasslib/service.scss" as s;
 
 .back-arrow {
-  @include s.click;
   display: flex;
   justify-content: flex-start;
+
+  position: relative;
   width: 100%;
   align-items: center;
+
+  &_button {
+    @include s.click;
+  }
+
+  &__text {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
