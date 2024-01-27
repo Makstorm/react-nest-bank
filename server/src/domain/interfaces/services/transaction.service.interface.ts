@@ -1,4 +1,5 @@
 import {
+  AccountRemplenishmentDto,
   CreateTransactionDto,
   TransactionDocument,
   UserDocument,
@@ -9,8 +10,13 @@ export interface ITransactionService {
     createTransactionDto: CreateTransactionDto,
     sender: UserDocument,
   ): Promise<TransactionDocument>;
-  findAll(): Promise<TransactionDocument[]>;
+  findAll(userId: string): Promise<TransactionDocument[]>;
   findOne(id: string): Promise<TransactionDocument>;
 
   remove(id: string): Promise<TransactionDocument>;
+
+  accountRemplenishment(
+    dto: AccountRemplenishmentDto,
+    receiver: UserDocument,
+  ): Promise<TransactionDocument>;
 }
