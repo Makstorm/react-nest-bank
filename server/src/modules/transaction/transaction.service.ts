@@ -43,11 +43,13 @@ export class TransactionService implements ITransactionService {
     }
 
     transactionEntity.sender = senderEntity.id;
+    transactionEntity.senderEmail = senderEntity.email;
 
     const receiver = await this.userService.findByEmail(
       createTransactionDto.receiverEmail,
     );
     transactionEntity.receiver = receiver.id;
+    transactionEntity.receiverEmail = receiver.email;
 
     transactionEntity.save();
 

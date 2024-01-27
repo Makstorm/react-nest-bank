@@ -5,12 +5,15 @@ import "./index.scss";
 import TransactionProperty from "../TransactionProperty";
 import Divider from "../../Common/Divider";
 import { TransactionType } from "../../../models/enums/transaction.enum";
+import { useAppSelector } from "../../../hooks/redux";
 
 interface ITransactionDataProp {
   transaction: ITransaction | null;
 }
 
 const TransactionData: FC<ITransactionDataProp> = ({ transaction }) => {
+  const email = useAppSelector((state) => state.userReduser.user?.email);
+
   const formatDateTime = (date: Date) => {
     const options = {
       day: "numeric",
@@ -30,32 +33,41 @@ const TransactionData: FC<ITransactionDataProp> = ({ transaction }) => {
     return <div>Ops thre isnt any transaction</div>;
   }
 
+  const getAddres = (transaction: ITransaction) => {
+    if (transaction.type === TransactionType.REMPLENISHABLE) {
+      return transaction.sender;
+    }
+
+    return transaction.type === TransactionType.CONSUMABLE &&
+      transaction.senderEmail === email
+      ? transaction.receiverEmail
+      : transaction.senderEmail;
+  };
+
+  const getType = (transaction: ITransaction) => {
+    if (transaction.type === TransactionType.REMPLENISHABLE) {
+      return "Recive";
+    }
+
+    return transaction.type === TransactionType.CONSUMABLE &&
+      transaction.senderEmail === email
+      ? "Send"
+      : "Recive";
+  };
+
   return (
     <div className="transaction-data">
       <TransactionProperty
         name="Date"
-        value={formatDateTime(transaction.date)}
+        value={formatDateTime(new Date(transaction.date))}
       />
       <Divider />
       <TransactionProperty
         name="Address"
-        value={
-          transaction.type === TransactionType.PROFITABLE ||
-          transaction.type === TransactionType.REMPLENISHABLE
-            ? transaction.sender
-            : transaction.receiver
-        }
+        value={getAddres(transaction) ? getAddres(transaction) : "cool"}
       />
       <Divider />
-      <TransactionProperty
-        name="Type"
-        value={
-          transaction.type === TransactionType.PROFITABLE ||
-          transaction.type === TransactionType.REMPLENISHABLE
-            ? "Recive"
-            : "Send"
-        }
-      />
+      <TransactionProperty name="Type" value={getType(transaction)} />
     </div>
   );
 };

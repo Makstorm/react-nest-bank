@@ -3,10 +3,13 @@ import "./index.scss";
 import { transactionsAPI } from "../../../store/services/TransactionsService";
 import TransactionSkeleton from "../TransactionsSceleton";
 import TransactionCard from "../TransactionCard";
+import { useAppSelector } from "../../../hooks/redux";
 
 const TransactionsList: FC = () => {
   const { data, isLoading, refetch } =
     transactionsAPI.useFetchUserTransactionsQuery("");
+
+  const email = useAppSelector((state) => state.userReduser.user?.email);
 
   useEffect(() => {
     // Refetch data when the component mounts or when the page gains focus
@@ -58,7 +61,11 @@ const TransactionsList: FC = () => {
       {data.map((transaction) => {
         console.log(transaction);
         return (
-          <TransactionCard key={transaction.id} transaction={transaction} />
+          <TransactionCard
+            userEmail={email ? email : undefined}
+            key={transaction.id}
+            transaction={transaction}
+          />
         );
         // return <div key={index}></div>;
       })}

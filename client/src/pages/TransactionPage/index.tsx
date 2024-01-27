@@ -9,25 +9,34 @@ import { transactionsAPI } from "../../store/services/TransactionsService";
 import PaymentBar from "../../components/Transactions/PaymentBar";
 import { TransactionType } from "../../models/enums/transaction.enum";
 import TransactionData from "../../components/Transactions/TransactionData";
+import { useAppSelector } from "../../hooks/redux";
+import { ITransaction } from "../../models/ITransaction";
 
 const TransactionPage = () => {
   // const dispatch = useAppDispatch();
 
   // const navigate = useNavigate();
 
+  const email = useAppSelector((state) => state.userReduser.user?.email);
+
   const { id } = useParams();
 
   const { data } = transactionsAPI.useFetchOneTransactionQuery(String(id));
 
-  const transaction = {
-    id: 3,
-    amount: 20,
-    sender: "Stripe",
-    type: TransactionType.REMPLENISHABLE,
-    receiver: "me",
-    date: new Date(),
-    category: "food",
+  const getType = (transaction: ITransaction) => {
+    if (transaction.type === TransactionType.REMPLENISHABLE) {
+      return TransactionType.REMPLENISHABLE;
+    }
+
+    return transaction.type === TransactionType.CONSUMABLE &&
+      transaction.senderEmail === email
+      ? TransactionType.CONSUMABLE
+      : TransactionType.PROFITABLE;
   };
+
+  if (!data) {
+    return <div>Ops thre isnt any transaction</div>;
+  }
 
   return (
     <PhonePage className="grey-bg">
@@ -36,12 +45,9 @@ const TransactionPage = () => {
       </section>
 
       <PhonePageContent>
-        <PaymentBar
-          type={data ? data.type : TransactionType.CONSUMABLE}
-          amount={data ? data.amount : 0}
-        />
+        <PaymentBar type={getType(data)} amount={data ? data.amount : 0} />
 
-        <TransactionData transaction={transaction ? transaction : null} />
+        <TransactionData transaction={data ? data : null} />
       </PhonePageContent>
     </PhonePage>
   );

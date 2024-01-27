@@ -7,9 +7,13 @@ import { TRANSACTION_ROUTE } from "../../AppRouter/consts";
 
 interface ITransactionCardProp {
   transaction: ITransaction;
+  userEmail?: string;
 }
 
-const TransactionCard: FC<ITransactionCardProp> = ({ transaction }) => {
+const TransactionCard: FC<ITransactionCardProp> = ({
+  transaction,
+  userEmail,
+}) => {
   const navigate = useNavigate();
 
   const getImage = (sender: string) => {
@@ -55,8 +59,8 @@ const TransactionCard: FC<ITransactionCardProp> = ({ transaction }) => {
             {transaction.type === TransactionType.REMPLENISHABLE
               ? transaction.sender
               : transaction.type === TransactionType.PROFITABLE
-              ? transaction.sender
-              : transaction.receiver}
+              ? transaction.senderEmail
+              : transaction.receiverEmail}
           </h4>
           <p className="text__time-type">
             {getTime(new Date(transaction.date))} *{" "}
@@ -69,13 +73,17 @@ const TransactionCard: FC<ITransactionCardProp> = ({ transaction }) => {
       </div>
       <div
         className={`transaction-card__amount ${
-          transaction.type === TransactionType.CONSUMABLE
+          transaction.type === TransactionType.CONSUMABLE &&
+          transaction.senderEmail === userEmail
             ? ""
             : "transaction-card__amount--profitable"
         }`}
       >
         <span>
-          {transaction.type === TransactionType.CONSUMABLE ? "- $" : "+ $"}
+          {transaction.type === TransactionType.CONSUMABLE &&
+          transaction.senderEmail === userEmail
+            ? "- $"
+            : "+ $"}
           {transaction.amount}
         </span>
       </div>

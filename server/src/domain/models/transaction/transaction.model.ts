@@ -31,10 +31,24 @@ export class TransactionModel {
 
   @ApiProperty({
     type: String,
+    description: 'User email who makes payment',
+    example: 'cool@email.com',
+  })
+  public senderEmail: string;
+
+  @ApiProperty({
+    type: String,
     description: 'User id who recieves payment',
     example: randomUUID(),
   })
   public receiver: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'User email who recieves payment',
+    example: 'cool2@email.com',
+  })
+  public receiverEmail: string;
 
   @ApiProperty({
     type: Date,
@@ -61,7 +75,9 @@ export class TransactionModel {
     model.type = transaction.type;
     model.amount = transaction.amount;
     model.sender = transaction.sender;
+    model.senderEmail = transaction.senderEmail;
     model.receiver = transaction.receiver;
+    model.receiverEmail = transaction.receiverEmail;
     model.date = transaction.createdAt;
     model.category = transaction.category;
 

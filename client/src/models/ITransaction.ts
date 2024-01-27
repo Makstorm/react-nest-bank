@@ -5,7 +5,9 @@ export interface ITransaction {
   type: TransactionType;
   amount: number;
   sender: string;
+  senderEmail: string;
   receiver: string;
+  receiverEmail: string;
   date: Date;
   category: string;
 }
