@@ -24,24 +24,31 @@ export class TransactionModel {
 
   @ApiProperty({
     type: String,
-    description: 'User who makes payment',
+    description: 'User id who makes payment',
     example: randomUUID(),
   })
   public sender: string;
 
   @ApiProperty({
     type: String,
-    description: 'User who recieves payment',
+    description: 'User id who recieves payment',
     example: randomUUID(),
   })
   public receiver: string;
 
   @ApiProperty({
     type: Date,
-    description: 'User who makes payment',
+    description: 'Transaction time',
     example: new Date(),
   })
   public date: Date;
+
+  @ApiProperty({
+    type: String,
+    description: 'Transaction category',
+    example: 'Food',
+  })
+  public category: string;
 
   public static formEntity(transaction: TransactionDocument): TransactionModel {
     if (!transaction) {
@@ -50,12 +57,13 @@ export class TransactionModel {
 
     const model = new TransactionModel();
 
-    model.id = transaction.id;
+    model.id = transaction._id.toString();
     model.type = transaction.type;
     model.amount = transaction.amount;
     model.sender = transaction.sender;
     model.receiver = transaction.receiver;
     model.date = transaction.createdAt;
+    model.category = transaction.category;
 
     return model;
   }

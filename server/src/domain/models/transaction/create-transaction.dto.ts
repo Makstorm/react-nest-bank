@@ -3,10 +3,6 @@ import { IsEmail } from 'class-validator';
 // import { TransactionType } from 'src/core';
 
 export class CreateTransactionDto {
-  // @ApiProperty({ type: String, example: 'cool@email.com' })
-  // @IsEmail()
-  // public senderEmail: string;
-
   @ApiProperty({ type: Number })
   public amount: number;
 
