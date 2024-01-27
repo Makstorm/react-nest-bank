@@ -15,32 +15,15 @@ import AuthError from "../../components/Auth/AuthErrror";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { fetchUser } from "../../store/reducers/ActionCreators";
 import { setUserError } from "../../store/reducers/UserSlice";
+import { userAPI } from "../../store/services/UserService";
 
 const AuthPage = () => {
+  const [passwordRecovery, { error: error1, isSuccess }] =
+    userAPI.useUserPasswordRecoverMutation();
+
   const dispatch = useAppDispatch();
 
   const { error, isAuth } = useAppSelector((state) => state.userReduser);
-
-  // Email field
-  // const [emailValue, setEmailValue] = useState<string>("");
-
-  // const handleEmailChange = (value: string) => {
-  //   setEmailValue(value);
-  // };
-
-  // // Password field
-  // const [passwordValue, setPasswordValue] = useState<string>("");
-
-  // const handlePasswordChange = (value: string) => {
-  //   setPasswordValue(value);
-  // };
-
-  // // Usernam field
-  // const [textValue, setTextValue] = useState<string>("");
-
-  // const handleTextChange = (value: string) => {
-  //   setTextValue(value);
-  // };
 
   const [formData, setFormData] = useState({
     email: "",
@@ -59,6 +42,7 @@ const AuthPage = () => {
 
   useEffect(() => {
     if (isAuth) navigate(BALANCE_ROUTE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuth]);
 
   const getTitle = (): { title: string; subtitle: string } => {
@@ -70,15 +54,10 @@ const AuthPage = () => {
       case "/signin": {
         return { title: "Sign in", subtitle: "Select login method" };
       }
-      case "/signup-confirm": {
-        return {
-          title: "Confirm account",
-          subtitle: "Write the code you received",
-        };
-      }
+
       case "/recovery": {
         return {
-          title: "Recover password",
+          title: "Recovery password",
           subtitle: "Choose a recovery method",
         };
       }
@@ -137,29 +116,12 @@ const AuthPage = () => {
           children: "Continue",
         };
       }
-      case "/signup-confirm": {
-        return {
-          outline: false,
-          onClick: () => {
-            navigate(SIGNIN_ROUTE);
-          },
-          children: "Continue",
-        };
-      }
 
       case "/recovery": {
         return {
           outline: false,
-          onClick: () => {},
-          children: "Change password",
-        };
-      }
-
-      case "/recovery-confirm": {
-        return {
-          outline: false,
           onClick: () => {
-            navigate(SIGNIN_ROUTE);
+            passwordRecovery(formData.email);
           },
           children: "Change password",
         };
@@ -177,7 +139,7 @@ const AuthPage = () => {
 
   return (
     <PhonePage>
-      <section style={{ marginTop: "50px" }}>
+      <section style={{ marginTop: "50px", padding: "0 20px" }}>
         <BackArrow />
       </section>
       <PageInfoTitle {...getTitle()} />
@@ -218,16 +180,6 @@ const AuthPage = () => {
           </>
         )}
 
-        {location.pathname === "/signup-confirm" && (
-          <>
-            <AuthInput
-              onInputChange={onChange}
-              title="Code"
-              type={InputType.TEXT}
-            />
-          </>
-        )}
-
         {location.pathname === "/recovery" && (
           <>
             <AuthInput
@@ -251,7 +203,11 @@ const AuthPage = () => {
 
         <ConfirmButton {...getButton()}></ConfirmButton>
 
+        {error1 ? <AuthError>Something wrong happend</AuthError> : null}
         {error ? <AuthError>{error}</AuthError> : null}
+        {isSuccess ? (
+          <AuthError success>Email password recovery sent</AuthError>
+        ) : null}
       </PhonePageContent>
     </PhonePage>
   );

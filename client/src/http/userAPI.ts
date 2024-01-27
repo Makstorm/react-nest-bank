@@ -10,13 +10,12 @@ export interface ITokenRes {
 export const registration = async (
   email: string,
   password: string,
-  userName: string
+  username: string
 ) => {
-  await $host.post<void>("/auth/signUp", { email, userName, password });
+  await $host.post<void>("/auth/signUp", { email, username, password });
 };
 
 export const login = async (email: string, password: string) => {
-  // console.log("login credentials", email, password);
   try {
     const { data } = await $host.post<ITokenRes>("/auth/sighIn", {
       email,
@@ -25,7 +24,6 @@ export const login = async (email: string, password: string) => {
     localStorage.setItem("token", data.accessToken);
 
     const decode = jwtDecode<IUser>(data.accessToken);
-    console.log("login response", decode);
 
     return decode;
   } catch (e) {

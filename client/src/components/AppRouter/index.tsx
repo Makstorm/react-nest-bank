@@ -12,8 +12,6 @@ import PhoneDisplay from "../../containers/PhoneDisplay";
 import ProtectedRoute from "./ProtectedRoute";
 
 const AppRouter = () => {
-  // console.log(user);
-
   const isAuth = useAppSelector((state) => state.userReduser.isAuth);
 
   // const router = createBrowserRouter(
