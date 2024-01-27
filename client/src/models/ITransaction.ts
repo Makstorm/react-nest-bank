@@ -2,10 +2,10 @@ import { TransactionType } from "./enums/transaction.enum";
 
 export interface ITransaction {
   id: number;
-  amount: number;
   type: TransactionType;
+  amount: number;
   sender: string;
-  date: Date;
   receiver: string;
+  date: Date;
   category: string;
 }
