@@ -1,0 +1,8 @@
+@use "../../../sasslib/service.scss" as s;
+
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: s.space(4);
+  height: 100px;
+}
