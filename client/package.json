@@ -17,6 +17,8 @@
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-loader-spinner": "^6.1.6",
+    "react-loading-skeleton": "^3.3.1",
     "react-redux": "^9.0.3",
     "react-router-dom": "^6.20.1",
     "sass": "^1.69.5"

@@ -1,0 +1,27 @@
+@use "../../../sasslib/service.scss" as s;
+
+.balance-change {
+  display: flex;
+  justify-content: center;
+  gap: s.space(3);
+  align-items: center;
+  z-index: 2;
+  width: 100%;
+  &__action {
+    display: flex;
+    flex-direction: column;
+    gap: s.space(0);
+    align-items: center;
+
+    .balance__button {
+      cursor: pointer;
+
+      border-radius: 100px;
+      border: 10px solid s.color(white);
+      background: #5b94e9;
+      padding: s.space(3);
+      width: 80px;
+      height: 80px;
+    }
+  }
+}

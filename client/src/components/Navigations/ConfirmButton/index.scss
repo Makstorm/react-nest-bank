@@ -19,6 +19,16 @@
     background: #fff;
     border: 1px solid #775ce5;
     color: #775ce5;
+
+    &-danger {
+      background: #fff;
+      border: 1px solid s.color(red);
+      color: s.color(red);
+    }
+  }
+
+  &--danger {
+    background-color: s.color(red);
   }
 
   @include s.click;

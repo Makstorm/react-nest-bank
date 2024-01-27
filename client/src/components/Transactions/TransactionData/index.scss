@@ -1,0 +1,17 @@
+@use "../../../sasslib/service.scss" as s;
+
+.transaction-data {
+  background-color: s.color(white);
+  padding: s.space(4);
+  border-radius: s.space(3);
+
+  display: flex;
+  flex-direction: column;
+  gap: s.space(4);
+
+  &__property {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

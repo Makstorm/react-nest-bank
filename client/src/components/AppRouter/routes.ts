@@ -1,5 +1,10 @@
 import AuthPage from "../../pages/AuthPAge";
 import ConfirmPage from "../../pages/ConfirmPage";
+import NotificationPage from "../../pages/NotificationsPage";
+import ReceivePage from "../../pages/ReceivePage";
+import SendPage from "../../pages/SendPage";
+import SettingsPage from "../../pages/SettingsPage";
+import TransactionPage from "../../pages/TransactionPage";
 import WalletPage from "../../pages/WalletPage";
 import WelcomePage from "../../pages/WelcomePage";
 import {
@@ -24,23 +29,23 @@ export const authRoutes = [
   },
   {
     path: NOTIFICATIONS_ROUTE,
-    Component: WelcomePage,
+    Component: NotificationPage,
   },
   {
     path: SETTINGS_ROUTE,
-    Component: WelcomePage,
+    Component: SettingsPage,
   },
   {
     path: RECIEVE_ROUTE,
-    Component: WelcomePage,
+    Component: ReceivePage,
   },
   {
     path: SEND_ROUTE,
-    Component: WelcomePage,
+    Component: SendPage,
   },
   {
-    path: TRANSACTION_ROUTE,
-    Component: WelcomePage,
+    path: TRANSACTION_ROUTE + "/:id",
+    Component: TransactionPage,
   },
 ];
 

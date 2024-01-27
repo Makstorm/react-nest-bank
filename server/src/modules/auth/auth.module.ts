@@ -7,9 +7,16 @@ import { TokenModule } from '../jwt';
 import { JwtGuard, JwtStrategy, LocalStrategy } from '../../core';
 import { PassportModule } from '@nestjs/passport';
 import { EmailModule } from '../email';
+import { PasswordModule } from '../password';
 
 @Module({
-  imports: [UserModule, TokenModule, PassportModule, EmailModule],
+  imports: [
+    UserModule,
+    TokenModule,
+    PassportModule,
+    EmailModule,
+    PasswordModule,
+  ],
   providers: [
     { provide: AuthServiceTag, useClass: AuthService },
     JwtStrategy,

@@ -9,7 +9,13 @@ export class Transaction {
   public sender: string;
 
   @Prop({ type: String })
+  public senderEmail: string;
+
+  @Prop({ type: String })
   public receiver: string;
+
+  @Prop({ type: String })
+  public receiverEmail: string;
 
   @Prop({ type: Number })
   public amount: number;
