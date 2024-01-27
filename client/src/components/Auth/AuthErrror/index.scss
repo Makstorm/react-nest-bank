@@ -8,4 +8,10 @@
   color: #f2883d;
   padding: s.space(4) s.space(5);
   background-color: rgba(242, 136, 61, 0.1);
+  border-radius: 12px;
+
+  &--success {
+    background-color: rgba(32, 244, 9, 0.108);
+    color: rgb(34, 255, 0);
+  }
 }
