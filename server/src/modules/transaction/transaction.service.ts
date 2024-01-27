@@ -103,7 +103,11 @@ export class TransactionService implements ITransactionService {
       );
     }
 
-    return transactions;
+    const sortedTransactions = transactions.sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+    );
+
+    return sortedTransactions;
   }
 
   public async findOne(id: string): Promise<TransactionDocument> {
