@@ -59,7 +59,6 @@ const TransactionsList: FC = () => {
   return (
     <div className="transactions-list">
       {data.map((transaction) => {
-        console.log(transaction);
         return (
           <TransactionCard
             userEmail={email ? email : undefined}

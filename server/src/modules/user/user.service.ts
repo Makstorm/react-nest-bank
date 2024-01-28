@@ -105,8 +105,6 @@ export class UserService implements IUserService {
   public async recalculateBankBalance(
     payload: TransactionEvent,
   ): Promise<void> {
-    console.log(1);
-
     const transactionAmount =
       payload.transaction.type === TransactionType.CONSUMABLE
         ? -payload.transaction.amount
@@ -123,17 +121,11 @@ export class UserService implements IUserService {
       money,
     };
 
-    console.log(2, resultParameters);
-
     const user = await this.findById(resultParameters.sender);
     const recipient = await this.findById(resultParameters.receiver);
 
-    console.log(3, user, recipient);
-
     user.balance = user.balance + money;
     recipient.balance = recipient.balance - money;
-
-    console.log(4, user, recipient);
 
     payload.type === TransactionEventType.DELETED
       ? (user.transactions = user.transactions.filter(
@@ -147,7 +139,6 @@ export class UserService implements IUserService {
         ))
       : recipient.transactions.push(payload.transaction.id);
 
-    console.log(5);
     user.save();
     recipient.save();
   }
